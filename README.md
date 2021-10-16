@@ -69,3 +69,13 @@ import (
 * [Setting up a k8 cluster with haproxy](#)
 * [REST API References](#)
 * [GRPC Proto and documentation](#)
+
+## TODO
+
+- [ ] Add workers limit to SPOP
+- [ ] Document SPOP
+- [ ] Create REST protocol
+- [ ] Create GRPC protocol
+- [ ] Normalize settings
+- [ ] Regression tests
+- [ ] Replace SPOA library with a custom one

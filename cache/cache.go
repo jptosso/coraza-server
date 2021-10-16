@@ -28,8 +28,13 @@ func (ts *TxCache) SetTransactionTtl(ttl int) {
 	ts.transactions.SetTTL(time.Duration(ttl) * time.Second)
 }
 
-func NewTxCache(ttl int) *TxCache {
+func (ts *TxCache) Expire(txid string) error {
+	return ts.transactions.Remove(txid)
+}
+
+func NewTxCache(ttl int, limit int) *TxCache {
 	c := ttlcache.NewCache()
+	c.SetCacheSizeLimit(limit)
 	c.SetTTL(time.Duration(ttl) * time.Second)
 	c.SetExpirationCallback(expirationCallback)
 	return &TxCache{

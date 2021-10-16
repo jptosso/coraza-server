@@ -1,12 +1,8 @@
 log_level: debug
 agents:
   -
-    max_active_transactions: 100000
+    transactions_active_limit: 100000
     bind: 0.0.0.0:9000
-    protocol: spoa #spoa, rest or grpc
-    request_timeout: 500
-    workers: 4
-    transaction_timeout: 500
-    ignore_response: false
+    protocol: spoa
     include:
       - ./docs/samplerules.conf

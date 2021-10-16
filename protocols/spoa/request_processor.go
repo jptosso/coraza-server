@@ -2,9 +2,11 @@ package spoa
 
 import (
 	"fmt"
+	"net"
 
 	spoe "github.com/criteo/haproxy-spoe-go"
 	"github.com/jptosso/coraza-waf"
+	"github.com/sirupsen/logrus"
 )
 
 func (s *SPOA) processRequest(msg spoe.Message) ([]spoe.Action, error) {
@@ -12,14 +14,19 @@ func (s *SPOA) processRequest(msg spoe.Message) ([]spoe.Action, error) {
 	phase := 0
 	var method, path, query, httpv string
 	var tx *coraza.Transaction
-	argnames := []string{"WAF Id", "Transaction ID", "Request IP", "Method", "Path", "Query", "HTTP Version",
+	argnames := []string{"Transaction ID", "Request IP", "Method", "Path", "Query", "HTTP Version",
 		"Request Headers", "Request Body Size", "Request Body"}
 	for msg.Args.Next() {
 		arg := msg.Args.Arg
-		value, ok := arg.Value.(string)
-		if !ok && phase != 7 {
-			return nil, fmt.Errorf("invalid argument for %s, string expected", argnames[phase])
+		value := ""
+		if phase == 0 || (phase >= 2 && phase < 7) || phase == 8 {
+			ok := true
+			value, ok = arg.Value.(string)
+			if !ok && (phase == 0 || phase == 2) {
+				return nil, fmt.Errorf("invalid argument for %s, string expected, got %v", argnames[phase], arg.Value)
+			}
 		}
+		logrus.Infof("Phase %d", phase)
 		switch phase {
 		case 0:
 			// TX UNIQUE ID
@@ -31,22 +38,27 @@ func (s *SPOA) processRequest(msg spoe.Message) ([]spoe.Action, error) {
 			}
 		case 1:
 			// REQUEST IP
-			tx.ProcessConnection(value, 0, "", 0)
+			val, ok := arg.Value.(net.IP)
+			if !ok {
+				return nil, fmt.Errorf("invalid ip address")
+			}
+			logrus.Debugf("Got request ip %s", val.String())
+			tx.ProcessConnection(val.String(), 0, "", 0)
 		case 2:
 			// METHOD
 			method = value
-		case 4:
+		case 3:
 			// PATH
 			path = value
-		case 5:
+		case 4:
 			//QUERY
 			query = value
 			//tx.ProcessConnection()
-		case 6:
+		case 5:
 			// HTTP VERSION
 			httpv = value
 			tx.ProcessUri(path+query, method, httpv)
-		case 7:
+		case 6:
 			// RESQUEST HEADERS
 			h, err := readHeaders(value)
 			if err != nil {
@@ -57,50 +69,27 @@ func (s *SPOA) processRequest(msg spoe.Message) ([]spoe.Action, error) {
 					tx.AddRequestHeader(k, v)
 				}
 			}
-			tx.ProcessRequestHeaders()
-		case 8:
+			if it := tx.ProcessRequestHeaders(); it != nil {
+				return spoeFail(true), nil
+			}
+		case 7:
 			// REQUEST BODY SIZE
 			//bsize = value
-		case 9:
+		case 8:
 			// REQUEST BODY
 			tx.ResponseBodyBuffer.Write([]byte(value))
 			tx.ProcessRequestBody()
 		default:
-			fmt.Println("Unexpected message")
+			logrus.Error("Unexpected message")
 		}
 		phase++
 	}
 	if it := tx.Interruption; it != nil {
 		// Transaction disrupted
-		return txToAction(tx), nil
+		return spoeFail(true), nil
 	}
 
+	logrus.Debug("Transaction was not disrupted")
 	// Just pass
-	return []spoe.Action{
-		spoe.ActionSetVar{
-			Name:  "action",
-			Scope: spoe.VarScopeSession,
-			Value: "pass",
-		},
-	}, nil
-}
-
-func txToAction(tx *coraza.Transaction) []spoe.Action {
-	if tx.Interrupted() {
-		return []spoe.Action{
-			spoe.ActionSetVar{
-				Name:  "action",
-				Scope: spoe.VarScopeSession,
-				Value: tx.Interruption.Action,
-			},
-		}
-	} else {
-		return []spoe.Action{
-			spoe.ActionSetVar{
-				Name:  "action",
-				Scope: spoe.VarScopeSession,
-				Value: "pass",
-			},
-		}
-	}
+	return spoeFail(false), nil
 }

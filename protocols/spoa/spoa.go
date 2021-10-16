@@ -21,7 +21,10 @@ type SPOA struct {
 func (s *SPOA) Init(waf *coraza.Waf, cfg config.Agent) error {
 	s.cfg = cfg
 	s.waf = waf
-	s.txcache = cache.NewTxCache(cfg.TransactionTtl)
+	s.txcache = cache.NewTxCache(cfg.TransactionTtl, cfg.TxActiveLimit)
+	if cfg.Workers > 0 {
+		log.Warn("Workers are not supported by SPOP protocol, it will be ignored")
+	}
 	return nil
 }
 
@@ -35,9 +38,9 @@ func (s *SPOA) Start() error {
 				return s.processRequest(msg)
 			}
 
-			//if msg.Name == "coraza-res" {
-			//return processResponse(msg)
-			//}
+			if msg.Name == "coraza-res" {
+				return s.processResponse(msg)
+			}
 		}
 		return nil, fmt.Errorf("invalid protocol request")
 	})
@@ -49,9 +52,12 @@ func (s *SPOA) Start() error {
 }
 
 func readHeaders(headers string) (http.Header, error) {
-	var h http.Header
+	h := http.Header{}
 	spl := strings.Split(headers, "\r\n")
 	for _, l := range spl {
+		if l == "" {
+			continue
+		}
 		spl2 := strings.SplitN(l, ":", 2)
 		if len(spl2) != 2 {
 			return nil, fmt.Errorf("invalid headers format")
@@ -61,4 +67,19 @@ func readHeaders(headers string) (http.Header, error) {
 		h.Add(key, value)
 	}
 	return h, nil
+}
+
+func spoeFail(fail bool) []spoe.Action {
+	f := 0
+	if fail {
+		f = 1
+	}
+	log.Debugf("Sending %t fail signal", fail)
+	return []spoe.Action{
+		spoe.ActionSetVar{
+			Name:  "fail",
+			Scope: spoe.VarScopeTransaction,
+			Value: f,
+		},
+	}
 }

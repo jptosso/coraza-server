@@ -8,7 +8,7 @@ import (
 	spoe "github.com/criteo/haproxy-spoe-go"
 	"github.com/jptosso/coraza-server/cache"
 	"github.com/jptosso/coraza-server/config"
-	"github.com/jptosso/coraza-waf"
+	"github.com/jptosso/coraza-waf/v2"
 	log "github.com/sirupsen/logrus"
 )
 

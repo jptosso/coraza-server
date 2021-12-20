@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/ReneKroon/ttlcache/v2"
-	"github.com/jptosso/coraza-waf"
+	"github.com/jptosso/coraza-waf/v2"
 )
 
 type TxCache struct {
@@ -21,7 +21,7 @@ func (ts *TxCache) Get(id string) *coraza.Transaction {
 }
 
 func (ts *TxCache) Store(tx *coraza.Transaction) error {
-	return ts.transactions.Set(tx.Id, tx)
+	return ts.transactions.Set(tx.ID, tx)
 }
 
 func (ts *TxCache) SetTransactionTtl(ttl int) {
@@ -48,5 +48,5 @@ func expirationCallback(key string, value interface{}) {
 		fmt.Println("Failed to expire transaction " + key)
 	}
 	tx.ProcessLogging()
-	fmt.Printf("Transaction %s forced to die\n", tx.Id)
+	fmt.Printf("Transaction %s forced to die\n", tx.ID)
 }

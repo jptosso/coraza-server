@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	spoe "github.com/criteo/haproxy-spoe-go"
-	"github.com/jptosso/coraza-waf"
+	"github.com/jptosso/coraza-waf/v2"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,7 +21,7 @@ func (s *SPOA) processResponse(msg spoe.Message) ([]spoe.Action, error) {
 		arg := msg.Args.Arg
 		value := ""
 		if phase == 0 || phase == 2 || phase == 4 {
-			ok := true
+			var ok bool
 			value, ok = arg.Value.(string)
 			if !ok && (phase == 0 || phase == 2) {
 				return nil, fmt.Errorf("invalid argument for %s, string expected, got %v", argnames[phase], arg.Value)
@@ -79,7 +79,7 @@ func (s *SPOA) processResponse(msg spoe.Message) ([]spoe.Action, error) {
 	}
 
 	//Expire will also run tx.ProcessLogging
-	if err := s.txcache.Expire(tx.Id); err != nil {
+	if err := s.txcache.Expire(tx.ID); err != nil {
 		// what to do here?
 		logrus.Error("Failed to expire transaction")
 	}

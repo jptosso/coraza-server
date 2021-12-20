@@ -5,7 +5,8 @@ import (
 	"net"
 
 	spoe "github.com/criteo/haproxy-spoe-go"
-	"github.com/jptosso/coraza-waf"
+	"github.com/jptosso/coraza-waf/v2"
+	"github.com/jptosso/coraza-waf/v2/types/variables"
 	"github.com/sirupsen/logrus"
 )
 
@@ -31,8 +32,8 @@ func (s *SPOA) processRequest(msg spoe.Message) ([]spoe.Action, error) {
 		case 0:
 			// TX UNIQUE ID
 			tx = s.waf.NewTransaction()
-			tx.Id = value
-			tx.GetCollection(coraza.VARIABLE_UNIQUE_ID).Set("", []string{tx.Id})
+			tx.ID = value
+			tx.GetCollection(variables.UniqueID).Set("", []string{tx.ID})
 			if err := s.txcache.Store(tx); err != nil {
 				return nil, err
 			}
@@ -57,7 +58,7 @@ func (s *SPOA) processRequest(msg spoe.Message) ([]spoe.Action, error) {
 		case 5:
 			// HTTP VERSION
 			httpv = value
-			tx.ProcessUri(path+query, method, httpv)
+			tx.ProcessURI(path+query, method, httpv)
 		case 6:
 			// RESQUEST HEADERS
 			h, err := readHeaders(value)

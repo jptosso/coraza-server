@@ -5,7 +5,7 @@ import (
 
 	"github.com/jptosso/coraza-server/config"
 	"github.com/jptosso/coraza-server/protocols/spoa"
-	"github.com/jptosso/coraza-waf"
+	"github.com/jptosso/coraza-waf/v2"
 )
 
 type Protocol interface {

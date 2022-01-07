@@ -78,7 +78,9 @@ func (s *SPOA) processRequest(msg spoe.Message) ([]spoe.Action, error) {
 			//bsize = value
 		case 8:
 			// REQUEST BODY
-			tx.ResponseBodyBuffer.Write([]byte(value))
+			if body, ok := arg.Value.([]byte); ok {
+				tx.ResponseBodyBuffer.Write(body)
+			}
 			tx.ProcessRequestBody()
 		default:
 			logrus.Error("Unexpected message")

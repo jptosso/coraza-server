@@ -79,7 +79,7 @@ func (s *SPOA) processRequest(msg spoe.Message) ([]spoe.Action, error) {
 		case 8:
 			// REQUEST BODY
 			if body, ok := arg.Value.([]byte); ok {
-				tx.ResponseBodyBuffer.Write(body)
+				tx.RequestBodyBuffer.Write(body)
 			}
 			tx.ProcessRequestBody()
 		default:

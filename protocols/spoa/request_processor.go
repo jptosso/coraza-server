@@ -58,7 +58,7 @@ func (s *SPOA) processRequest(msg spoe.Message) ([]spoe.Action, error) {
 		case 5:
 			// HTTP VERSION
 			httpv = value
-			tx.ProcessURI(path+query, method, httpv)
+			tx.ProcessURI(path+"?"+query, method, httpv)
 		case 6:
 			// RESQUEST HEADERS
 			h, err := readHeaders(value)

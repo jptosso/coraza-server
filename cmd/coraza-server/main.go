@@ -2,13 +2,14 @@ package main
 
 import (
 	"flag"
-	"sync"
-
+	_ "github.com/jptosso/coraza-libinjection"
+	_ "github.com/jptosso/coraza-pcre"
 	"github.com/jptosso/coraza-server/config"
 	"github.com/jptosso/coraza-server/protocols"
 	"github.com/jptosso/coraza-waf/v2"
 	"github.com/jptosso/coraza-waf/v2/seclang"
 	"github.com/sirupsen/logrus"
+	"sync"
 )
 
 func main() {

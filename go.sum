@@ -10,13 +10,6 @@ github.com/criteo/haproxy-spoe-go v1.0.6/go.mod h1:o04s69MOZ7SvPthMtUt/tfn1hcorQ
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/gijsbers/go-pcre v0.0.0-20161214203829-a84f3096ab3c h1:o5z/Stj4aWUiDiCVFdEOgXcwNF+Z7mQSlvDTaWBK98Q=
-github.com/gijsbers/go-pcre v0.0.0-20161214203829-a84f3096ab3c/go.mod h1:Bd83Kcti1U5OMXYYTjilhd6os+l6AmlTMVbDtaBvycQ=
-github.com/jptosso/coraza-libinjection v0.0.0-20220109185528-78d7edbd2d9f h1:ubXDAWXbj5XBery9Vg+/N6LWeSIU8e6pYeB+nJh31xQ=
-github.com/jptosso/coraza-libinjection v0.0.0-20220109185528-78d7edbd2d9f/go.mod h1:ZS0abmCZ5y8brMAFJ9BOY/w5usGZ8KRZgV30/sbCmaU=
-github.com/jptosso/coraza-pcre v0.0.0-20211201204829-1bea0f044896 h1:f5iyHtkDDCYDnfDwF/zraHxy9bxwN2ChYwtPyON5vz8=
-github.com/jptosso/coraza-pcre v0.0.0-20211201204829-1bea0f044896/go.mod h1:0NieM5u5kuGbGUj+mQFIl8xUHANcYm6AnrQca25vt/0=
-github.com/jptosso/coraza-waf/v2 v2.0.0-beta.2.0.20211201203316-49869b6ff2ea/go.mod h1:d9K0ycCNi9YmgqQKjgOheq73EY4l6fB8Y6HdLWcx5FM=
 github.com/jptosso/coraza-waf/v2 v2.0.0-beta.6.0.20211217191841-efdf8ccbcd9d h1:aRI0nEgsZtpkNZYI6/vbCODAgbNitvTyESm7Sni05IQ=
 github.com/jptosso/coraza-waf/v2 v2.0.0-beta.6.0.20211217191841-efdf8ccbcd9d/go.mod h1:d9K0ycCNi9YmgqQKjgOheq73EY4l6fB8Y6HdLWcx5FM=
 github.com/konsorten/go-windows-terminal-sequences v1.0.3/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=

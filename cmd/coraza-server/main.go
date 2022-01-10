@@ -2,8 +2,6 @@ package main
 
 import (
 	"flag"
-	_ "github.com/jptosso/coraza-libinjection"
-	_ "github.com/jptosso/coraza-pcre"
 	"github.com/jptosso/coraza-server/config"
 	"github.com/jptosso/coraza-server/protocols"
 	"github.com/jptosso/coraza-waf/v2"

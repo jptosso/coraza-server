@@ -14,4 +14,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 )
 
-require github.com/jptosso/coraza-waf/v2 v2.0.0-beta.6.0.20211217191841-efdf8ccbcd9d
+require (
+	github.com/jptosso/coraza-waf/v2 v2.0.0-rc.1
+	go.uber.org/zap v1.20.0 // indirect
+)

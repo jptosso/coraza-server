@@ -29,7 +29,10 @@ func (ts *TxCache) SetTransactionTtl(ttl int) {
 }
 
 func (ts *TxCache) Expire(txid string) error {
-	return ts.transactions.Remove(txid)
+	if err := ts.transactions.Remove(txid); err != nil {
+		return err
+	}
+	return nil
 }
 
 func NewTxCache(ttl int, limit int) *TxCache {
@@ -46,7 +49,11 @@ func expirationCallback(key string, value interface{}) {
 	tx, ok := value.(*coraza.Transaction)
 	if !ok {
 		fmt.Println("Failed to expire transaction " + key)
+		return
 	}
 	tx.ProcessLogging()
+	if err := tx.Clean(); err != nil {
+		fmt.Println("Failed to clean transaction " + key)
+	}
 	fmt.Printf("Transaction %s forced to die\n", tx.ID)
 }

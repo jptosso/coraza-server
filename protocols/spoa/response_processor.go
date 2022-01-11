@@ -66,7 +66,9 @@ func (s *SPOA) processResponse(msg spoe.Message) ([]spoe.Action, error) {
 			//bsize = value
 		case 5:
 			// RESPONSE BODY
-			tx.ResponseBodyBuffer.Write([]byte(value))
+			if body, ok := arg.Value.([]byte); ok {
+				tx.ResponseBodyBuffer.Write(body)
+			}
 			tx.ProcessResponseBody()
 		default:
 			logrus.Error("Unexpected message")

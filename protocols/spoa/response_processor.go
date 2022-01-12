@@ -49,7 +49,11 @@ func (s *SPOA) processResponse(msg spoe.Message) ([]spoe.Action, error) {
 			httpver = value
 		case 3:
 			// RESPONSE HEADERS
-			h, err := readHeaders(value)
+			val, ok := arg.Value.(string)
+			if !ok {
+				return nil, fmt.Errorf("invalid response headers, got %s", arg.Value)
+			}
+			h, err := readHeaders(val)
 			if err != nil {
 				return nil, err
 			}

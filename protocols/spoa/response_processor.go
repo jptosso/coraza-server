@@ -20,7 +20,7 @@ func (s *SPOA) processResponse(msg spoe.Message) ([]spoe.Action, error) {
 	for msg.Args.Next() {
 		arg := msg.Args.Arg
 		value := ""
-		if phase == 0 || phase == 2 || phase == 4 {
+		if phase == 0 || phase == 2 || phase == 3 || phase == 4 {
 			var ok bool
 			value, ok = arg.Value.(string)
 			if !ok && (phase == 0 || phase == 2) {

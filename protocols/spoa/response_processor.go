@@ -20,7 +20,7 @@ func (s *SPOA) processResponse(msg spoe.Message) ([]spoe.Action, error) {
 	for msg.Args.Next() {
 		arg := msg.Args.Arg
 		value := ""
-		if phase == 0 || phase == 2 || phase == 4 {
+		if phase == 0 || phase == 2 || phase == 3 || phase == 4 {
 			var ok bool
 			value, ok = arg.Value.(string)
 			if !ok && (phase == 0 || phase == 2) {
@@ -49,11 +49,7 @@ func (s *SPOA) processResponse(msg spoe.Message) ([]spoe.Action, error) {
 			httpver = value
 		case 3:
 			// RESPONSE HEADERS
-			val, ok := arg.Value.(string)
-			if !ok {
-				return nil, fmt.Errorf("invalid response headers, got %s", arg.Value)
-			}
-			h, err := readHeaders(val)
+			h, err := readHeaders(value)
 			if err != nil {
 				return nil, err
 			}
